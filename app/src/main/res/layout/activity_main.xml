@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -20,22 +21,20 @@
             app:popupTheme="@style/Theme.VDK1.PopupOverlay"
             app:title="Hệ thống hỗ trợ người cao tuổi" />
 
+
+
     </com.google.android.material.appbar.AppBarLayout>
 
-
-    <Button
-        android:id="@+id/button"
+    <org.osmdroid.views.MapView
+        android:id="@+id/mapview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="-1dp"
-        android:layout_marginTop="50dp"
-        android:text="Trang chủ" />
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="-1dp"
-        android:layout_marginTop="90dp"
-        android:text="Vị trí" />
+        android:layout_height="match_parent">
 
-</RelativeLayout>
+    </org.osmdroid.views.MapView>
+
+
+
+
+
+
+</LinearLayout>

@@ -15,6 +15,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.IBinder;
+import android.os.Parcelable;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.util.Log;
@@ -30,6 +31,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import org.osmdroid.util.GeoPoint;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -146,14 +149,16 @@ public class ChayNgamService extends Service {
             NotificationManager notificationManager =(NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             notificationManager.notify(time.hashCode(), notification);
         }
-        void sendMessage(String ketqua)
+        void sendMessage(GeoPoint location)
         {
             Intent intent = new Intent();
-            intent.putExtra("ketqua",ketqua);
+            intent.putExtra("CurrentLocation", (Parcelable) location);
 
             intent.setAction("test.Broadcast");
-            Log.d("test", "sendMessage : "+ ketqua);
+            Log.d("test", "sendMessage : "+ location.toString());
             sendBroadcast(intent);
+
+
         }
         @Override
         public Integer doInBackground(Integer ... intergers) {
@@ -166,33 +171,34 @@ public class ChayNgamService extends Service {
                     HashMap ketquaa = (HashMap) snapshot.getValue();
                     String time =  snapshot.getKey();
                     String cleanTime = time.replaceAll("\"", "");
-                    Log.d("test", ketquaa.toString());
                     Log.d("test", time);
-                    //long status = (long) ketquaa.get("status");
-
-                    String la=ketquaa.get("latitude").toString();
-                    String lo=ketquaa.get("longtitude").toString();
-
-
-
-
-
-
-
-                    if(!first_time &&!Bin.isActivityActive)
+                    String la="";
+                    String lo="";
+                    if(ketquaa.get("latitude")!=null &&ketquaa.get("longitude")!=null )
                     {
-                        try {
-                            notifyy(cleanTime,la,lo);
-                        } catch (ParseException e) {
-                            e.printStackTrace();
+                         la=ketquaa.get("latitude").toString();
+                         lo=ketquaa.get("longitude").toString();
+                        GeoPoint CurrentLocation = new GeoPoint(Float.parseFloat(la),Float.parseFloat(lo));
+                        Log.d("test", "my lcoaiton from fire: "+CurrentLocation.toString());
+                        if(!first_time &&!Bin.isActivityActive)
+                        {
+                            try {
+                                notifyy(cleanTime,la,lo);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            Log.d("test","đã notiffy()");
                         }
-                        Log.d("test","đã notiffy()");
+                        else
+                        {
+                            first_time=false;
+                        }
+                        if(Bin.isActivityActive) sendMessage(CurrentLocation);
                     }
-                    else
-                    {
-                        first_time=false;
-                    }
-                    //sendMessage("ketqua",ketquaa);
+
+
+
+
 
 
                 }
